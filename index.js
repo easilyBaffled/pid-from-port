@@ -71,15 +71,13 @@ list.push(splitRowOnData(inserStatePlaceholder(row)));
 				}, [])
 		);
 
-const get = input => {
+module.exports = input => {
 	if (typeof input !== 'number') {
 		return Promise.reject(new TypeError(`Expected a number, got ${typeof input}`));
 	}
 
 	return getList().then(list => getPort(input, list));
 };
-
-module.exports = get;
 
 module.exports.all = input => {
 	if (!Array.isArray(input)) {
