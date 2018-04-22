@@ -1,5 +1,4 @@
 'use strict';
-console.log('Version: ' + process.version);
 
 const execa = require('execa');
 
