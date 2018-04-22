@@ -105,8 +105,6 @@ module.exports.list = () => getList().then(list => {
 });
 
 console.log('Version: ' + process.version);
-
-
 //
 // module.exports.list = () =>
 // 	getList()
