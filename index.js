@@ -10,7 +10,16 @@ const win32 = () => execa.stdout('netstat', ['-ano']);
 
 const getListFn = process.platform === 'darwin' ? macos : process.platform === 'linux' ? linux : win32;
 const cols = process.platform === 'darwin' ? [3, 8] : process.platform === 'linux' ? [4, 6] : [1, 4];
-const isProtocol = x => /^\s*(tcp|udp)/i.test(x);
+
+const isProtocol = str => /^\s*(tcp|udp|TCP|UDP)/.test(str);
+const inserStatePlaceholder = startIndex => string => (
+	string[startIndex] === ' ' ?
+		string.slice(0, startIndex) + 'STATE' + string.slice(startIndex) :
+		string
+);
+const splitRowOnData = str => (
+	str.trim().split(/\s+/)
+);
 
 const parsePid = input => {
 	if (typeof input !== 'string') {
@@ -32,24 +41,44 @@ const getPort = (input, list) => {
 	return parsePid(port[cols[1]]);
 };
 
-const getList = () => getListFn().then(list => list
-	.split('\n')
-	.reduce((result, x) => {
-		if (isProtocol(x)) {
-			result.push(x.match(/\S+/g) || []);
-		}
+function findStateIndex(listTable) {
+	const header = listTable.match(/\n?(.*(state|State).*)\n/);
+	return header ?
+				header[1].search(/state|State/) :
+		[];
+}
 
-		return result;
-	}, [])
-);
+const getList = () =>
+	getListFn()
+		.then(list => {
+			const stateIndex = findStateIndex(list);
 
-module.exports = input => {
+			return {
+				inserStatePlaceholder: inserStatePlaceholder(stateIndex),
+				list
+			};
+		})
+		.then(({inserStatePlaceholder, list}) =>
+			list
+				.split('\n')
+				.reduce((list, row) => {
+					if (isProtocol(row)) {
+list.push(splitRowOnData(inserStatePlaceholder(row)));
+					}
+
+					return list;
+				}, [])
+		);
+
+const get = input => {
 	if (typeof input !== 'number') {
 		return Promise.reject(new TypeError(`Expected a number, got ${typeof input}`));
 	}
 
 	return getList().then(list => getPort(input, list));
 };
+
+module.exports = get;
 
 module.exports.all = input => {
 	if (!Array.isArray(input)) {
@@ -74,3 +103,18 @@ module.exports.list = () => getList().then(list => {
 
 	return ret;
 });
+//
+// module.exports.list = () =>
+// 	getList()
+// 		.then(list => {
+// 			return list.reduce((acc, x) => {
+// 				const match = x[cols[0]].match(/[^]*[.:](\d+)$/);
+// 				if (match) {
+// 					acc.set(parseInt(match[1], 10), parsePid(x[cols[1]]));
+// 				}
+// 				return acc;
+// 			}, new Map());
+// 		});
+//
+// get(3000).then(console.log);
+// macos().then(console.log);

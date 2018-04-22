@@ -3,14 +3,20 @@ import {serial as test} from 'ava';
 import getPort from 'get-port';
 import m from '.';
 
-const srv = () => http.createServer((req, res) => {
-	res.end();
-});
+const pidFromPort = m;
+
+const startNewServer = port => {
+	const server = http.createServer((req, res) => {
+		res.end();
+	});
+	server.listen(port);
+	return server;
+};
 
 test('success', async t => {
 	const port = await getPort();
-	const server = srv().listen(port);
-	t.truthy(await m(port));
+	const server = startNewServer(port);
+	t.truthy(await pidFromPort(port));
 	server.close();
 });
 
@@ -25,7 +31,7 @@ test('accepts a number', async t => {
 
 test('all', async t => {
 	const [p1, p2] = await Promise.all([getPort(), getPort()]);
-	const [s1, s2] = [srv().listen(p1), srv().listen(p2)];
+	const [s1, s2] = [startNewServer(p1), startNewServer(p2)];
 	const ports = await m.all([p1, p2]);
 
 	t.true(ports instanceof Map);
