@@ -1,4 +1,4 @@
-# pid-from-port [![Build Status](https://travis-ci.org/kevva/pid-from-port.svg?branch=master)](https://travis-ci.org/kevva/pid-from-port)
+# pid-from-port [![Build Status](https://travis-ci.org/easilyBaffled/pid-from-port.svg?branch=master)](https://travis-ci.org/easilyBaffled/pid-from-port)
 
 > Get PID from a port
 
