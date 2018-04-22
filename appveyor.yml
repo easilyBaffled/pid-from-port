@@ -11,9 +11,6 @@ install:
   - set PATH=%APPDATA%\npm;%PATH%
   - npm install
 
-matrix:
-  fast_finish: true
-
 build: off
 
 test_script:
