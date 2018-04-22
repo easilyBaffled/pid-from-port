@@ -1,4 +1,6 @@
 'use strict';
+console.log('Version: ' + process.version);
+
 const execa = require('execa');
 
 const macos = () => execa.stdout('netstat', ['-anv', '-p', 'tcp'])
@@ -104,7 +106,6 @@ module.exports.list = () => getList().then(list => {
 	return ret;
 });
 
-console.log('Version: ' + process.version);
 //
 // module.exports.list = () =>
 // 	getList()
