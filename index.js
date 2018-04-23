@@ -12,12 +12,13 @@ const win32 = () => execa.stdout('netstat', ['-ano']);
 const getListFn = process.platform === 'darwin' ? macos : process.platform === 'linux' ? linux : win32;
 const cols = process.platform === 'darwin' ? [3, 8] : process.platform === 'linux' ? [4, 6] : [1, 4];
 
-const isProtocol = str => /^\s*(tcp|udp|TCP|UDP)/.test(str);
-const inserStatePlaceholder = startIndex => string => (
+const isProtocol = str => /^\s*(tcp|udp)/i.test(str);
+const insertStatePlaceholder = startIndex => string => (
 	string[startIndex] === ' ' ?
-		string.slice(0, startIndex) + 'STATE' + string.slice(startIndex) :
+			string.slice(0, startIndex) + 'STATE' + string.slice(startIndex) :
 		string
 );
+
 const splitRowOnData = str => (
 	str.trim().split(/\s+/)
 );
@@ -43,10 +44,12 @@ const getPort = (input, list) => {
 };
 
 function findStateIndex(listTable) {
-	const header = listTable.match(/\n?(.*(state|State).*)\n/);
-	return header ?
-				header[1].search(/state|State/) :
-		[];
+	if (typeof listTable !== 'string') {
+		return null;
+	}
+
+	const header = listTable.match(/\n?(.*(state).*)\n/i); // The (.*, .*) are so this will capture the whole line
+	return header ? header[1].search(/state/i) : null;
 }
 
 const getList = () =>
@@ -55,16 +58,16 @@ const getList = () =>
 			const stateIndex = findStateIndex(list);
 
 			return {
-				inserStatePlaceholder: inserStatePlaceholder(stateIndex),
+				insertStatePlaceholder: insertStatePlaceholder(stateIndex),
 				list
 			};
 		})
-		.then(({inserStatePlaceholder, list}) =>
+		.then(({insertStatePlaceholder, list}) =>
 			list
 				.split('\n')
 				.reduce((list, row) => {
 					if (isProtocol(row)) {
-list.push(splitRowOnData(inserStatePlaceholder(row)));
+list.push(splitRowOnData(insertStatePlaceholder(row)));
 					}
 
 					return list;
@@ -103,6 +106,19 @@ module.exports.list = () => getList().then(list => {
 	return ret;
 });
 
+if (process.env.NODE_ENV === 'test') {
+	module.exports.util = {
+		getListFn,
+		isProtocol,
+		insertStatePlaceholder,
+		splitRowOnData,
+		parsePid,
+		getPort,
+		findStateIndex,
+		getList
+	};
+}
+
 //
 // module.exports.list = () =>
 // 	getList()
@@ -115,6 +131,3 @@ module.exports.list = () => getList().then(list => {
 // 				return acc;
 // 			}, new Map());
 // 		});
-//
-// get(3000).then(console.log);
-// macos().then(console.log);

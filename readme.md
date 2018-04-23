@@ -1,4 +1,4 @@
-# pid-from-port [![Build Status](https://travis-ci.org/easilyBaffled/pid-from-port.svg?branch=master)](https://travis-ci.org/easilyBaffled/pid-from-port)
+# pid-from-port [![Build Status](https://travis-ci.org/easilyBaffled/pid-from-port.svg?branch=master)](https://travis-ci.org/easilyBaffled/pid-from-port) [![Build status](https://ci.appveyor.com/api/projects/status/8mh3i140nq32c7vw/branch/master?svg=true)](https://ci.appveyor.com/project/easilyBaffled/pid-from-port/branch/master)
 
 > Get PID from a port
 
