@@ -20,7 +20,7 @@
 		"node": ">=4"
 	},
 	"scripts": {
-		"test": "cross-env NODE_ENV=test xo --fix && xo && ava",
+		"test": "xo && ava",
 		"test:coverage": "nyc npm test",
 	  	"test:report": "nyc report --reporter=text-lcov | coveralls",
 		"test:watch": "npm test -- --watch"
