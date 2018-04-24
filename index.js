@@ -89,7 +89,8 @@ module.exports.all = input => {
 	if (!Array.isArray(input)) {
 		return Promise.reject(new TypeError(`Expected an array, got ${typeof input}`));
 	}
-
+	console.log(input);
+	getList().then(console.log);
 	return getList()
 		.then(list => Promise.all(input.map(x => [x, getPort(x, list)])))
 		.then(list => new Map(list));
