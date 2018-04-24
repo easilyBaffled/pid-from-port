@@ -13,6 +13,9 @@ const getListFn = process.platform === 'darwin' ? macos : process.platform === '
 const cols = process.platform === 'darwin' ? [3, 8] : process.platform === 'linux' ? [4, 6] : [1, 4];
 
 const isProtocol = str => /^\s*(tcp|udp)/i.test(str);
+
+// There are situations where the state column is empty, this will ensure the column is not empty,
+// and therefore not lost when the row is turned to an array
 const insertStatePlaceholder = startIndex => string => (
 	string[startIndex] === ' ' ?
 			string.slice(0, startIndex) + 'STATE' + string.slice(startIndex) :
@@ -20,7 +23,7 @@ const insertStatePlaceholder = startIndex => string => (
 );
 
 const splitRowOnData = str => (
-	str.trim().split(/\s+/)
+	str.trim().split(/\s+/) // Leading white space would be included in the slit array, Trim ensures that there isn't any
 );
 
 const parsePid = input => {
@@ -62,12 +65,12 @@ const getList = () =>
 				list
 			};
 		})
-		.then(({insertStatePlaceholder, list}) =>
-			list
+		.then(state =>
+			state.list
 				.split('\n')
 				.reduce((list, row) => {
 					if (isProtocol(row)) {
-list.push(splitRowOnData(insertStatePlaceholder(row)));
+						list.push(splitRowOnData(state.insertStatePlaceholder(row)));
 					}
 
 					return list;
@@ -113,9 +116,7 @@ if (process.env.NODE_ENV === 'test') {
 		insertStatePlaceholder,
 		splitRowOnData,
 		parsePid,
-		getPort,
-		findStateIndex,
-		getList
+		findStateIndex
 	};
 }
 
@@ -131,4 +132,3 @@ if (process.env.NODE_ENV === 'test') {
 // 				return acc;
 // 			}, new Map());
 // 		});
-
