@@ -53,7 +53,7 @@ test('list', async t => {
 	t.true(list instanceof Map);
 	await t.notThrows(m.all(Array.from(list.keys())));
 });
-/*
+
 // PidFromPort.util
 test('getListFn', async t => {
 	const table = await m.util.getListFn();
@@ -110,4 +110,4 @@ test('findStateIndex', t => {
 	t.is(findStateIndex('  (State)\n'), 3);
 	t.is(findStateIndex('  (STATE) \n'), 3);
 });
-*/
+
