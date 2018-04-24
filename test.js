@@ -57,7 +57,7 @@ test('list', async t => {
 test('getListFn', async t => {
 	const table = await m.util.getListFn();
 	t.true(typeof table === 'string');
-	console.log(table);
+	console.log('label', table);
 	t.true(/\s*(\D+\n)\s*(^\s*(udp|tcp)\d?.*\n)+/gmi.test(table)); // A dumb matcher for {1,2} Header rows and rows that start with udp or tcp
 });
 
