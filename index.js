@@ -36,6 +36,8 @@ const parsePid = input => {
 };
 
 const getPort = (input, list) => {
+	console.log({input});
+	console.log({list});
 	const regex = new RegExp(`[.:]${input}$`);
 	const port = list.find(x => regex.test(x[cols[0]]));
 
