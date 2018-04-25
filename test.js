@@ -1,18 +1,28 @@
 'use strict';
-// Import http from 'http';
+import http from 'http';
 import {serial as test} from 'ava';
-// Import getPort from 'get-port';
+import getPort from 'get-port';
 import m from '.';
 
-// Const pidFromPort = m;
-//
-// const startNewServer = port => {
-// 	const server = http.createServer((req, res) => {
-// 		res.end();
-// 	});
-// 	server.listen(port);
-// 	return server;
-// };
+const pidFromPort = m;
+
+const startNewServer = port => {
+	const server = http.createServer((req, res) => {
+		res.end();
+	});
+	server.listen(port);
+	return server;
+};
+
+// (async () => {
+// 	try {
+// 		const list = await m.list();
+// 		m.all(Array.from(list.keys())).then( console.log )
+// 	} catch (e) {
+// 		// Deal with the fact the chain failed
+// 		console.log(e);
+// 	}
+// })();
 
 test('list', async t => {
 	const list = await m.list();
@@ -20,7 +30,7 @@ test('list', async t => {
 	console.log({list});
 	await t.notThrows(m.all(Array.from(list.keys())));
 });
-/*
+
 // PidFromPort
 test('success', async t => {
 	const port = await getPort();
@@ -118,4 +128,3 @@ test('findStateIndex', t => {
 	t.is(findStateIndex('  (State)\n'), 3);
 	t.is(findStateIndex('  (STATE) \n'), 3);
 });
-*/

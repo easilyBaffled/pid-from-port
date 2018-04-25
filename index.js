@@ -36,8 +36,8 @@ const parsePid = input => {
 };
 
 const getPort = (input, list) => {
-	console.log({input});
-	console.log({list});
+	// Console.log({input});
+	// console.log({list});
 	const regex = new RegExp(`[.:]${input}$`);
 	const port = list.find(x => regex.test(x[cols[0]]));
 
@@ -91,8 +91,7 @@ module.exports.all = input => {
 	if (!Array.isArray(input)) {
 		return Promise.reject(new TypeError(`Expected an array, got ${typeof input}`));
 	}
-	console.log(input);
-	getList().then(console.log);
+
 	return getList()
 		.then(list => Promise.all(input.map(x => [x, getPort(x, list)])))
 		.then(list => new Map(list));
