@@ -28,7 +28,9 @@ import m from '.';
 test('list', async t => {
 	const list = await m.list();
 	t.true(list instanceof Map);
-	// Console.log({list});
+	const altList = await m.list();
+	console.log({list});
+	console.log({altList});
 	await t.notThrows(m.all(Array.from(list.keys())));
 });
 
