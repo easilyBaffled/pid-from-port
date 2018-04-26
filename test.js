@@ -7,6 +7,10 @@ const srv = () => http.createServer((req, res) => {
 	res.end();
 });
 
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 test('success', async t => {
 	const port = await getPort();
 	const server = srv().listen(port);
@@ -41,5 +45,6 @@ test('all', async t => {
 test('list', async t => {
 	const list = await m.list();
 	t.true(list instanceof Map);
+	await sleep(2000);
 	await t.notThrows(m.all(Array.from(list.keys())));
 });
