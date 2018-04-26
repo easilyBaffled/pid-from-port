@@ -24,13 +24,6 @@ const startNewServer = port => {
 // 	}
 // })();
 
-test('list', async t => {
-	const list = await m.list();
-	t.true(list instanceof Map);
-	console.log({list});
-	await t.notThrows(m.all(Array.from(list.keys())));
-});
-
 // PidFromPort
 test('success', async t => {
 	const port = await getPort();
@@ -65,11 +58,23 @@ test('all', async t => {
 });
 
 // PidFromPort.list
+// test('list', async t => {
+// 	const list = await m.list();
+// 	t.true(list instanceof Map);
+// 	console.log({list});
+// 	await t.notThrows(m.all(Array.from(list.keys())));
+// });
+
 test('list', async t => {
 	const list = await m.list();
 	t.true(list instanceof Map);
-	console.log({list});
-	await t.notThrows(m.all(Array.from(list.keys())));
+	// Console.log({list});
+	// await t.notThrows(m.all(Array.from(list.keys())));
+	await t.notThrows(m
+		.list()
+		.then(list => Array.from(list.keys()))
+		.then(m.all)
+	);
 });
 
 // PidFromPort.util
