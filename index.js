@@ -93,6 +93,10 @@ module.exports.all = input => {
 	}
 
 	return getList()
+		.then(list => {
+			console.log(list);
+			return list;
+		})
 		.then(list => Promise.all(input.map(x => [x, getPort(x, list)])))
 		.then(list => new Map(list));
 };
