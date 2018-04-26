@@ -87,21 +87,7 @@ module.exports = input => {
 	return getList().then(list => getPort(input, list));
 };
 
-module.exports.all = input => {
-	if (!Array.isArray(input)) {
-		return Promise.reject(new TypeError(`Expected an array, got ${typeof input}`));
-	}
-	console.log(input);
-	return getList()
-		.then(list => {
-			console.log(list);
-			return list;
-		})
-		.then(list => Promise.all(input.map(x => [x, getPort(x, list)])))
-		.then(list => new Map(list));
-};
-
-module.exports.list = () => getList().then(list => {
+const list = () => getList().then(list => {
 	const ret = new Map();
 
 	for (const x of list) {
@@ -114,6 +100,24 @@ module.exports.list = () => getList().then(list => {
 
 	return ret;
 });
+
+module.exports.all = input => {
+	if (!Array.isArray(input)) {
+		return Promise.reject(new TypeError(`Expected an array, got ${typeof input}`));
+	}
+	console.log(input);
+	return list()
+		.then(console.log)
+		.then(getList)
+		// .then(list => {
+		// 	console.log(list);
+		// 	return list;
+		// })
+		.then(list => Promise.all(input.map(x => [x, getPort(x, list)])))
+		.then(list => new Map(list));
+};
+
+module.exports.list = list;
 
 if (process.env.NODE_ENV === 'test') {
 	module.exports.util = {
