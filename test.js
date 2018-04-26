@@ -2,7 +2,6 @@
 // Import http from 'http';
 import {serial as test} from 'ava';
 // Import getPort from 'get-port';
-import execa from 'execa';
 import m from '.';
 // Const pidFromPort = m;
 //
@@ -26,16 +25,11 @@ import m from '.';
 
 // PidFromPort.list
 test('list', async t => {
-	const names = await execa.stdout('lsof');
-	console.log({names});
 	const list = await m.list();
 	t.true(list instanceof Map);
 	const altList = await m.list();
 	console.log({list});
 	console.log({altList});
-
-	const names2 = await execa.stdout('lsof');
-	console.log({names2});
 	await t.notThrows(m.all(Array.from(list.keys())));
 });
 
