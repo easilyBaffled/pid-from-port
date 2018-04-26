@@ -91,7 +91,7 @@ module.exports.all = input => {
 	if (!Array.isArray(input)) {
 		return Promise.reject(new TypeError(`Expected an array, got ${typeof input}`));
 	}
-
+	console.log(input);
 	return getList()
 		.then(list => {
 			console.log(list);

@@ -1,18 +1,18 @@
 'use strict';
-import http from 'http';
+// Import http from 'http';
 import {serial as test} from 'ava';
-import getPort from 'get-port';
+// Import getPort from 'get-port';
 import m from '.';
 
-const pidFromPort = m;
-
-const startNewServer = port => {
-	const server = http.createServer((req, res) => {
-		res.end();
-	});
-	server.listen(port);
-	return server;
-};
+// Const pidFromPort = m;
+//
+// const startNewServer = port => {
+// 	const server = http.createServer((req, res) => {
+// 		res.end();
+// 	});
+// 	server.listen(port);
+// 	return server;
+// };
 
 // (async () => {
 // 	try {
@@ -24,6 +24,15 @@ const startNewServer = port => {
 // 	}
 // })();
 
+// PidFromPort.list
+test('list', async t => {
+	const list = await m.list();
+	t.true(list instanceof Map);
+	// Console.log({list});
+	await t.notThrows(m.all(Array.from(list.keys())));
+});
+
+/*
 // PidFromPort
 test('success', async t => {
 	const port = await getPort();
@@ -55,14 +64,6 @@ test('all', async t => {
 
 	s1.close();
 	s2.close();
-});
-
-// PidFromPort.list
-test('list', async t => {
-	const list = await m.list();
-	t.true(list instanceof Map);
-	console.log({list});
-	await t.notThrows(m.all(Array.from(list.keys())));
 });
 
 // PidFromPort.util
@@ -121,3 +122,4 @@ test('findStateIndex', t => {
 	t.is(findStateIndex('  (State)\n'), 3);
 	t.is(findStateIndex('  (STATE) \n'), 3);
 });
+*/
