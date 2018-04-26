@@ -58,23 +58,11 @@ test('all', async t => {
 });
 
 // PidFromPort.list
-// test('list', async t => {
-// 	const list = await m.list();
-// 	t.true(list instanceof Map);
-// 	console.log({list});
-// 	await t.notThrows(m.all(Array.from(list.keys())));
-// });
-
 test('list', async t => {
 	const list = await m.list();
 	t.true(list instanceof Map);
-	// Console.log({list});
-	// await t.notThrows(m.all(Array.from(list.keys())));
-	await t.notThrows(m
-		.list()
-		.then(list => Array.from(list.keys()))
-		.then(m.all)
-	);
+	console.log({list});
+	await t.notThrows(m.all(Array.from(list.keys())));
 });
 
 // PidFromPort.util
