@@ -21,7 +21,8 @@ const lsof = () => execa.stdout('lsof', ['-P', '-i'])
 		const addAsValues = zipToObject(splitStringOnData(headers).map(toLowerCase));
 		return rows
 			.map(row => addAsValues(splitStringOnData(row)));
-	});
+	})
+	.catch(() => []);
 
 const win32 = () => execa.stdout('netstat', ['-ano'])
 	.then(list => list
