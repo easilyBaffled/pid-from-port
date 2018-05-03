@@ -13,28 +13,43 @@ const zipToObject = keys => values =>
 
 const toLowerCase = str => str.toLowerCase();
 
-const lsof = () => execa.stdout('lsof', ['-P', '-i'])
-	.then(results => {
-		const rows = results.split('\n');
-		const headers = rows.shift();
+function stringToTable(str = '') {
+	const rows = str.split('\n');
+	const headers = rows.shift();
 
-		const addAsValues = zipToObject(splitStringOnData(headers).map(toLowerCase));
-		return rows
-			.map(row => addAsValues(splitStringOnData(row)));
-	})
-	.catch(() => []);
+	return {headers, rows};
+}
 
-const win32 = () => execa.stdout('netstat', ['-ano'])
-	.then(list => list
+function tableToDict({headers, rows}) {
+	const addAsValues = zipToObject(
+		splitStringOnData(headers).map(toLowerCase)
+	);
+
+	return rows
+		.map(row => addAsValues(splitStringOnData(row)));
+}
+
+function stringToProtocolList(str = '') {
+	return str
 		.split('\n')
 		.reduce((result, x) => {
 			if (isProtocol(x)) {
-				result.push(x.match(/\S+/g) || []);
+					result.push(x.match(/\S+/g) || []);
 			}
 
 			return result;
-		}, [])
-	);
+		}, []);
+}
+
+const lsof = () =>
+	execa.stdout('lsof', ['-Pn', '-i'])
+		.then(stringToTable)
+		.then(tableToDict)
+		.catch(() => []); // When nothing is found, pass the empty array along to the user and let them decide how to handle the situation
+
+const win32 = () =>
+	execa.stdout('netstat', ['-ano'])
+		.then(stringToProtocolList);
 
 const getList = process.platform === 'darwin' ? lsof : process.platform === 'linux' ? lsof : win32;
 const cols = process.platform === 'darwin' ? {port: 'name', pid: 'pid'} : process.platform === 'linux' ? {port: 'name', pid: 'pid'} : {port: 1, pid: 4};
@@ -95,6 +110,11 @@ if (process.env.NODE_ENV === 'test') {
 	module.exports.util = {
 		isProtocol,
 		splitStringOnData,
-		parsePid
+		parsePid,
+		stringToProtocolList,
+		stringToTable,
+		tableToDict,
+		zipToObject,
+		toLowerCase
 	};
 }
