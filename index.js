@@ -10,7 +10,7 @@ const splitStringOnData = str => (
 
 const zipToObject = keys => values =>
 	keys.reduce((obj, key, i) => Object.assign({}, obj, {[key]: values[i]}), {});
-
+// String -> string
 const toLowerCase = str => str.toLowerCase();
 
 function stringToTable(str = '') {

@@ -4,6 +4,9 @@ import {serial as test} from 'ava';
 import getPort from 'get-port';
 import m from '.';
 
+// Const {check, gen} = require('ava-check');
+const {check, gen, property} = require('testcheck');
+
 const pidFromPort = m;
 
 const startNewServer = port => {
@@ -80,3 +83,28 @@ test('parsePid', t => {
 
 	t.true(['1234', '",1234', '   ",1234', '",pid=1234'].every(pid => parsePid(pid) === 1234));
 });
+
+const {toLowerCase} = m.util;
+test('toLowerCase', t => {
+	t.true(
+		check(
+			property(gen.string, str => toLowerCase(str) === str.toLowerCase()),
+			{numTests: 100}
+		)
+	);
+});
+
+const {stringToTable} = m.util;
+test('stringToTable', t => {
+	t.true(
+		check(
+			property(gen.string, str => {
+				const res = stringToTable(str);
+				return typeof res.headers === 'string' && Array.isArray(res.rows) && res.headers + '\n' + res.rows.join('\n') === str;
+			},
+			{numTests: 100}
+			)
+		)
+	);
+});
+
