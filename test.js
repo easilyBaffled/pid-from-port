@@ -3,11 +3,11 @@ import http from 'http';
 import {serial as test} from 'ava';
 import getPort from 'get-port';
 import type from 'type-detect';
-import execa from 'execa';
+
 import m from '.';
 
 const pidFromPort = m;
-
+const values = obj => Object.keys(obj).map(k => obj[k]);
 const startNewServer = port => {
 	const server = http.createServer((req, res) => {
 		res.end();
@@ -96,7 +96,7 @@ test('zipToObject', t => {
 			t.deepEqual(zipToObject([])(notArray), {});
 		});
 	const obj = {a: 1, b: 2, c: 3};
-	t.deepEqual(zipToObject(Object.keys(obj))(Object.values(obj)), obj);
+	t.deepEqual(zipToObject(Object.keys(obj))(values(obj)), obj);
 });
 
 const {stringToTable} = m.util;
@@ -167,6 +167,3 @@ test('stringToProtocolList', t => {
 		]
 	);
 });
-
-execa.stdout('lsof', ['-Pn', '-i'])
-	.then(console.log);

@@ -11,7 +11,8 @@ const splitStringOnData = str => (
 const zipToObject = keys => values =>
     keys.reduce((obj, key, i) => Object.assign({}, obj, {[key]: values[i]}), {});
 
-function stringToTable(str = '') {
+function stringToTable(str) {
+	str = str || '';
 	const rows = str.split('\n');
 	const headers = splitStringOnData(rows.shift()).map(str => str.toLowerCase());
 
@@ -21,13 +22,14 @@ function stringToTable(str = '') {
 	};
 }
 
-function tableToDict({headers, rows}) {
-	const addAsValues = zipToObject(headers);
+function tableToDict(table) {
+	const addAsValues = zipToObject(table.headers);
 
-	return rows.map(addAsValues);
+	return table.rows.map(addAsValues);
 }
 
-function stringToProtocolList(str = '') {
+function stringToProtocolList(str) {
+	str = str || '';
 	return str
 		.split('\n')
 		.reduce((result, x) => {
