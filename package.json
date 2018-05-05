@@ -11,9 +11,9 @@
 	},
 	"contributors": [
 		{
-		  "name": "Danny Michaelis",
-		  "email": "dmichaelis0@gmail.com",
-		  "url": "github.com/easilyBaffled"
+			"name": "Danny Michaelis",
+			"email": "dmichaelis0@gmail.com",
+			"url": "github.com/easilyBaffled"
 		}
 	],
 	"engines": {
@@ -24,9 +24,9 @@
 		"test:4": "npx --package=node-bin@4 -- npm test",
 		"test:6": "npx --package=node-bin@6 -- npm test",
 		"test:8": "npx --package=node-bin@8 -- npm test",
-	  	"test:history": "npm run test:4 && npm run test:6 && npm run test: 8",
+		"test:history": "npm run test:4 && npm run test:6 && npm run test: 8",
 		"test:coverage": "nyc npm test",
-	  	"test:report": "nyc report --reporter=text-lcov | coveralls",
+		"test:report": "nyc report --reporter=text-lcov | coveralls",
 		"test:watch": "npm test -- --watch"
 	},
 	"files": [
@@ -40,14 +40,17 @@
 	],
 	"dependencies": {
 		"coveralls": "^3.0.0",
-		"execa": "^0.9.0"
+		"execa": "^0.9.0",
+		"type-detect": "^4.0.8"
 	},
 	"devDependencies": {
-		"ava": "*",
+		"ava": "^1.0.0-beta.4",
+		"ava-check": "^1.0.0-rc.0",
 		"cross-env": "^5.1.4",
 		"get-port": "^3.2.0",
 		"nyc": "^11.7.1",
 		"pre-commit": "^1.2.2",
+		"testcheck": "^1.0.0-rc.2",
 		"xo": "*"
 	}
 }

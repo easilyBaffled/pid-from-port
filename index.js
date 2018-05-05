@@ -5,28 +5,26 @@ const execa = require('execa');
 const isProtocol = str => /^\s*(tcp|udp)/i.test(str);
 
 const splitStringOnData = str => (
-	str.trim().split(/\s+/) // Leading white space would be included in the slit array, Trim ensures that there isn't any
+    str.trim().split(/\s+/) // Leading white space would be included in the slit array, Trim ensures that there isn't any
 );
 
 const zipToObject = keys => values =>
-	keys.reduce((obj, key, i) => Object.assign({}, obj, {[key]: values[i]}), {});
-// String -> string
-const toLowerCase = str => str.toLowerCase();
+    keys.reduce((obj, key, i) => Object.assign({}, obj, {[key]: values[i]}), {});
 
 function stringToTable(str = '') {
 	const rows = str.split('\n');
-	const headers = rows.shift();
+	const headers = splitStringOnData(rows.shift()).map(str => str.toLowerCase());
 
-	return {headers, rows};
+	return {
+		headers,
+		rows: rows.map(splitStringOnData)
+	};
 }
 
 function tableToDict({headers, rows}) {
-	const addAsValues = zipToObject(
-		splitStringOnData(headers).map(toLowerCase)
-	);
+	const addAsValues = zipToObject(headers);
 
-	return rows
-		.map(row => addAsValues(splitStringOnData(row)));
+	return rows.map(addAsValues);
 }
 
 function stringToProtocolList(str = '') {
@@ -34,7 +32,7 @@ function stringToProtocolList(str = '') {
 		.split('\n')
 		.reduce((result, x) => {
 			if (isProtocol(x)) {
-					result.push(x.match(/\S+/g) || []);
+                result.push(x.match(/\S+/g) || []);
 			}
 
 			return result;
@@ -52,7 +50,10 @@ const win32 = () =>
 		.then(stringToProtocolList);
 
 const getList = process.platform === 'darwin' ? lsof : process.platform === 'linux' ? lsof : win32;
-const cols = process.platform === 'darwin' ? {port: 'name', pid: 'pid'} : process.platform === 'linux' ? {port: 'name', pid: 'pid'} : {port: 1, pid: 4};
+const cols = process.platform === 'darwin' ? {port: 'name', pid: 'pid'} : process.platform === 'linux' ? {
+	port: 'name',
+	pid: 'pid'
+} : {port: 1, pid: 4};
 
 const parsePid = input => {
 	if (typeof input !== 'string') {
@@ -99,7 +100,7 @@ module.exports.list = () => getList().then(list => {
 		const match = x[cols.port].match(/[^]*[.:](\d+)$/);
 
 		if (match) {
-			ret.set(parseInt(match[1], 10), parsePid(x[cols.pid]));
+            ret.set(parseInt(match[1], 10), parsePid(x[cols.pid]));
 		}
 	}
 
@@ -114,7 +115,6 @@ if (process.env.NODE_ENV === 'test') {
 		stringToProtocolList,
 		stringToTable,
 		tableToDict,
-		zipToObject,
-		toLowerCase
+		zipToObject
 	};
 }

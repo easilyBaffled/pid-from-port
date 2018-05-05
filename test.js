@@ -2,10 +2,9 @@
 import http from 'http';
 import {serial as test} from 'ava';
 import getPort from 'get-port';
+import type from 'type-detect';
+import execa from 'execa';
 import m from '.';
-
-// Const {check, gen} = require('ava-check');
-const {check, gen, property} = require('testcheck');
 
 const pidFromPort = m;
 
@@ -84,27 +83,90 @@ test('parsePid', t => {
 	t.true(['1234', '",1234', '   ",1234', '",pid=1234'].every(pid => parsePid(pid) === 1234));
 });
 
-const {toLowerCase} = m.util;
-test('toLowerCase', t => {
-	t.true(
-		check(
-			property(gen.string, str => toLowerCase(str) === str.toLowerCase()),
-			{numTests: 100}
-		)
-	);
+const empties = ['', 0, false, undefined, null, {}, []];
+
+const {zipToObject} = m.util;
+test('zipToObject', t => {
+	t.is(type(zipToObject(empties[Math.floor(Math.random() * 7)])), 'function');
+	empties
+		.filter(v => !Array.isArray(v))
+		.forEach(notArray => {
+			t.throws(() => zipToObject(notArray)(notArray));
+			t.throws(() => zipToObject(notArray)([]));
+			t.deepEqual(zipToObject([])(notArray), {});
+		});
+	const obj = {a: 1, b: 2, c: 3};
+	t.deepEqual(zipToObject(Object.keys(obj))(Object.values(obj)), obj);
 });
 
 const {stringToTable} = m.util;
+const testTable = `a b c
+				   1 2 3
+				   4 5 6`.replace(/^\s*/gm, '');
 test('stringToTable', t => {
-	t.true(
-		check(
-			property(gen.string, str => {
-				const res = stringToTable(str);
-				return typeof res.headers === 'string' && Array.isArray(res.rows) && res.headers + '\n' + res.rows.join('\n') === str;
-			},
-			{numTests: 100}
-			)
-		)
+	empties
+		.filter(v => v && type(v) !== 'string')
+		.forEach(notStr => t.throws(() => stringToTable(notStr)));
+
+	t.deepEqual(stringToTable(), {headers: [''], rows: []});
+	t.deepEqual(
+		stringToTable('Some Pig'),
+		{
+			headers: ['some', 'pig'],
+			rows: []
+		}
+	);
+	t.deepEqual(
+		stringToTable('Some\nPig'),
+		{
+			headers: ['some'],
+			rows: [['Pig']]
+		}
+	);
+	t.deepEqual(
+		stringToTable(testTable),
+		{
+			headers: ['a', 'b', 'c'],
+			rows: [
+				['1', '2', '3'],
+				['4', '5', '6']
+			]
+		}
 	);
 });
 
+const {tableToDict} = m.util;
+const table = {headers: ['a', 'b', 'c'], rows: [['1', '2', '3'], ['4', '5', '6']]};
+test('tableToDict', t => {
+	t.deepEqual(
+		tableToDict({
+			headers: [],
+			rows: []
+		}),
+		[]
+	);
+	tableToDict(table)
+		.forEach(row =>
+			t.deepEqual(Object.keys(row), table.headers)
+		);
+});
+
+const {stringToProtocolList} = m.util;
+const testStr = `a b c
+				 tcp 1 2 3
+				 udp 4 5 6
+				 udp5 4 5 6`;
+test('stringToProtocolList', t => {
+	t.deepEqual(stringToProtocolList(), []);
+	t.deepEqual(
+		stringToProtocolList(testStr),
+		[
+			['tcp', '1', '2', '3'],
+			['udp', '4', '5', '6'],
+			['udp5', '4', '5', '6']
+		]
+	);
+});
+
+execa.stdout('lsof', ['-Pn', '-i'])
+	.then(console.log);
