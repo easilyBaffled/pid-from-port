@@ -43,6 +43,6 @@
 		"pre-commit": "^1.2.2",
 		"testcheck": "^1.0.0-rc.2",
 	  	"type-detect": "^4.0.8",
-		"xo": "*"
+		"xo": "0.20.0"
 	}
 }
