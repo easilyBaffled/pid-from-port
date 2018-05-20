@@ -1,5 +1,8 @@
-# pid-from-port [![Build Status](https://travis-ci.org/easilyBaffled/pid-from-port.svg?branch=master)](https://travis-ci.org/easilyBaffled/pid-from-port) [![Build status](https://ci.appveyor.com/api/projects/status/8mh3i140nq32c7vw/branch/master?svg=true)](https://ci.appveyor.com/project/easilyBaffled/pid-from-port/branch/master)
-
+# pid-from-port 
+[![npm version](https://badge.fury.io/js/pid-from-port.svg)](https://badge.fury.io/js/pid-from-port)
+[![Build Status](https://travis-ci.org/easilyBaffled/pid-from-port.svg?branch=master)](https://travis-ci.org/easilyBaffled/pid-from-port) 
+[![Build status](https://ci.appveyor.com/api/projects/status/8mh3i140nq32c7vw/branch/master?svg=true)](https://ci.appveyor.com/project/easilyBaffled/pid-from-port/branch/master)
+[![Coverage Status](https://coveralls.io/repos/github/easilyBaffled/pid-from-port/badge.svg?branch=master)](https://coveralls.io/github/easilyBaffled/pid-from-port?branch=master)
 > Get PID from a port
 
 

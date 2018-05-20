@@ -1,6 +1,6 @@
 {
 	"name": "pid-from-port",
-	"version": "1.1.3",
+	"version": "1.1.4",
 	"description": "Get PID from a port",
 	"license": "MIT",
 	"repository": "kevva/pid-from-port",
@@ -16,8 +16,8 @@
 		"run-test": "cross-env NODE_ENV=test xo --fix && xo && ava",
 		"test:4": "npx --package=node-bin@4 -- npm test",
 		"test:6": "npx --package=node-bin@6 -- npm test",
-		"test:8": "npx --package=node-bin@8 -- npm test",
-		"test:history": "npm run test:4 && npm run test:6 && npm run test: 8",
+		"test:stable": "npx --package=node-bin@stable -- npm test",
+		"test:history": "npm run test:4 && npm run test:6 && npm run test:stable",
 		"test": "nyc npm run run-test",
 		"test:report": "nyc report --reporter=text-lcov | coveralls",
 		"test:watch": "npm test -- --watch"
