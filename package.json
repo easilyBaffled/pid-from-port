@@ -32,7 +32,7 @@
 		"port"
 	],
 	"dependencies": {
-		"execa": "^0.10.0"
+		"execa": "^4.0.2"
 	},
 	"devDependencies": {
 		"ava": "*",
